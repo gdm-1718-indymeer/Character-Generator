@@ -11,39 +11,21 @@ var firebaseConfig = {
   firebase.initializeApp(firebaseConfig);
 
 let grid = document.getElementById('grid');
-const container = document.getElementById('grid');
+let container = document.getElementById('grid');
 let bit = [];
-
 
 function createGrid(){
     container.innerHTML = ""; 
 
     for (let x = 0; x < 64; x++) {
         let div = document.createElement('div');
-        div.className = 0;
+        div.id = x;
         bit.push(0);
 
         container.append(div)
     }
 }
 
-function generateCharacter() {
-    bit.forEach((element) => {
-        setTimeout(function () {
-        console.log(element)
-        container.innerHTML = ""; 
-
-        for( let key in element){
-
-            let div = document.createElement('div');
-            div.className = element[key];
-            container.append(div)
-       
-        };        
-     }, 1000);
-    });
-   
-}
 function pushFirebase(){
     firebase.database().ref("/character").push(bit)
     createGrid();
@@ -56,33 +38,48 @@ function loopFirebase(){
         snapshot.forEach(function(childSnapshot) {
             let char = childSnapshot.val();
             bit.push(char);
-
         });
     }); 
-
-    generateCharacter();
-    //createGrid();
+    generateCharacter()
 }
 
+function generateCharacter() {
+    bit.forEach((element, index) => {
+        setTimeout(function () {
+            container.innerHTML = ""; 
 
+        for( let key in element){
 
+                let div = document.createElement('div');
+                div.className = element[key];
+                container.append(div)
+        };   
+    }, index * 3000);  
+    })
+}
+
+function LoopRaspberry(){
+    firebase.database().ref("/pi").set({
+        loop: true
+    })
+
+}
 
 document.getElementById("generate").addEventListener("click", pushFirebase);
 document.getElementById("loop").addEventListener("click", loopFirebase);
-
-
+document.getElementById("clear").addEventListener("click", createGrid);
+document.getElementById("raspiLoop").addEventListener("click", LoopRaspberry);
 
 grid.addEventListener('click', function(evt) {
    let target = evt.target;
-   bit[target.className] = 1;
+   bit[target.id] = 1;
    target.style.backgroundColor = 'black';
-   generateCharacter();
 
 }, false);
 
 grid.addEventListener('dblclick', function(evt) {
     let target = evt.target;
-    bit[target.className] = 0;
+    bit[target.id] = 0;
     target.style.backgroundColor = '';
  
  }, false);
