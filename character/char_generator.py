@@ -15,8 +15,7 @@ firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://character-generator-3420c.firebaseio.com/'
 })
 
-ref = db.reference('/character')
-snapshot = ref.get()
+
 AllCharacters = []
 
 X = [255, 0, 0]  # Red
@@ -35,6 +34,8 @@ db.reference('/pi').listen(listener)
 
 
 def loopCharacters():
+    ref = db.reference('/character')
+    snapshot = ref.get()
     for key, val in snapshot.items():
         #print('{0} => {1}'.format(key, val))
         AllCharacters = []
