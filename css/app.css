@@ -14,3 +14,7 @@
     background-color: blueviolet;
     outline: 1px solid;
 }
+
+[class="1"]{
+  background-color: black !important;
+}

@@ -11,16 +11,16 @@ var firebaseConfig = {
   firebase.initializeApp(firebaseConfig);
 
 let grid = document.getElementById('grid');
+const container = document.getElementById('grid');
 let bit = [];
 
 
 function createGrid(){
-    const container = document.getElementById('grid');
     container.innerHTML = ""; 
 
     for (let x = 0; x < 64; x++) {
         let div = document.createElement('div');
-        div.className = x;
+        div.className = 0;
         bit.push(0);
 
         container.append(div)
@@ -28,9 +28,21 @@ function createGrid(){
 }
 
 function generateCharacter() {
-    for(let i = 0; i < bit.length; i++){
-        
-    }
+    bit.forEach((element) => {
+        setTimeout(function () {
+        console.log(element)
+        container.innerHTML = ""; 
+
+        for( let key in element){
+
+            let div = document.createElement('div');
+            div.className = element[key];
+            container.append(div)
+       
+        };        
+     }, 1000);
+    });
+   
 }
 function pushFirebase(){
     firebase.database().ref("/character").push(bit)
@@ -38,7 +50,7 @@ function pushFirebase(){
 }
 
 function loopFirebase(){
-    bit = [];
+    bit =[];
     let leadsRef = firebase.database().ref('character');
     leadsRef.on('value', function(snapshot) {
         snapshot.forEach(function(childSnapshot) {
@@ -48,9 +60,7 @@ function loopFirebase(){
         });
     }); 
 
-    forEach(let element in bit){
-        console.log(element)
-    }
+    generateCharacter();
     //createGrid();
 }
 
