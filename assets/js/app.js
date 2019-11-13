@@ -15,6 +15,7 @@ let container = document.getElementById('grid');
 let login = localStorage.getItem('loggedIn');
 
 let bit = [];
+let t;
 
 if(login == null){
     window.location.replace('register.html')
@@ -24,12 +25,16 @@ function Logout(){
     window.location.replace('register.html')
 
 }
+
 const warningTitleCSS = 'color:red; font-size:60px; font-weight: bold; -webkit-text-stroke: 1px black;';
-      const warningDescCSS = 'font-size: 18px;';
-      console.log('%cStop!', warningTitleCSS);
-      console.log("%cIn name of god, dubbelclick on a clicked item to remove the click", warningDescCSS);
+const warningDescCSS = 'font-size: 18px;';
+console.log('%cStop!', warningTitleCSS);
+console.log("%cIn name of god, dubbelclick on a clicked item to remove the click", warningDescCSS);
+console.log("%cClick twice on show saved characters", warningDescCSS);
+
 
 function createGrid(){
+    clearTimeout(t)
     container.innerHTML = ""; 
     bit = []
     for (let x = 0; x < 64; x++) {
@@ -64,7 +69,7 @@ function loopFirebase(){
 
 function generateCharacter() {
     bit.forEach((element, index) => {
-        setTimeout(function () {
+       t = setTimeout(function () {
             container.innerHTML = ""; 
 
         for( let key in element){
@@ -73,9 +78,11 @@ function generateCharacter() {
                 div.className = element[key];
                 container.append(div)
         };   
+
     }, index * 3000);  
     })
 }
+
 
 function LoopRaspberry(){
     firebase.database().ref("/pi").set({
