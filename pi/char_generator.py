@@ -20,11 +20,13 @@ AllCharacters = []
 
 X = [255, 0, 0]  # Red
 O = [255, 255, 255]  # White
+E = [0, 0, 0]  # White
+
 
 def listener(event):
     #print(event.data["loop"])  # new data at /reference/event.path. None if deleted
     if event.data["loop"] == True:
-        print('its true')
+       # print('its true')
         loopCharacters()
         db.reference('/pi').set({
             "loop" : False
@@ -32,7 +34,24 @@ def listener(event):
         
 db.reference('/pi').listen(listener)
 
+def stream(event):
+    #print(event.data)  # new data at /reference/event.path. None if deleted
+    realCharacters()       
+db.reference('/realtime').listen(stream)
 
+def realCharacters():
+    ref = db.reference('/realtime')
+    snapshot = ref.get()
+    del AllCharacters[:]
+    for val in snapshot:
+        #print('{0} => {1}'.format(key, val))
+        #print(val)
+        if val == 0:
+            AllCharacters.append(E)
+        elif val == 1:
+            AllCharacters.append(X)
+    sense.set_pixels(AllCharacters)
+    
 def loopCharacters():
     ref = db.reference('/character')
     snapshot = ref.get()
